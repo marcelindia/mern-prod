@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const productRoutes = require("./routes/products");
 
 const app = express();
@@ -13,6 +14,13 @@ app.use((req, res, next) => {
 
 app.use("/api/products", productRoutes);
 
-app.listen(3000, () => {
-  console.log("Listening on port 3000");
-});
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(3000, () => {
+      console.log("Listening on port 3000");
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
